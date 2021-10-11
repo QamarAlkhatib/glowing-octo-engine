@@ -6,14 +6,20 @@ const randomModal = require('./Schemas.js')
 async function AddTOFavHandler(req, res) {
 
     let { email, name, origin, status, species, id } = req.body;
-    const newData = new randomModal({
-        email: email,
-        name: name,
-        origin: origin,
-        status: status,
-        species: species,
-        id: id
-    });
+
+    randomModal.create({
+        id,
+        email,
+        name,
+        origin,
+        status,
+        species,
+    }).then(() => {
+        randomModel.find({}, (error, AllData) => res.json(AllData))
+
+    })
+
+
     newData.save();
     res.status(200).json(newData)
 
