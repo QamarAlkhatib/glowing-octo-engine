@@ -3,31 +3,34 @@
 require('dotenv').config();
 const express = require('express')
 const server = express();
-const cors = require ('cors')
+const cors = require('cors')
 const mongoose = require('mongoose')
 const PORT = process.env.PORT
 server.use(cors());
 server.use(express.json());
 
-mongoose.connect(`${process.env.MONGO_ATLAS}`,{ useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(`${process.env.MONGO_ATLAS}`, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const RandomSchema = require('./modules/Schemas.js')
 const Functions = require('./modules/RandomFunction.js')
 const finalSpace = require('./modules/API.js')
+const { AddTOFavHandler, getFromFav } = require('./modules/AddToFav.js')
 
 server.get('/', homeHandler)
-server.get('/Random',RandomSchema)
-server.get('/getData',Functions)
-server.get('/getFinalSpaceData',finalSpace)
+server.get('/Random', RandomSchema)
+server.get('/getData', Functions)
+server.get('/getFinalSpaceData', finalSpace)
 server.get('*', notFoundHandler)
+server.get('/getFavData', getFromFav)
+server.post('/addToFav', AddTOFavHandler)
 
-function homeHandler(req,res){
+function homeHandler(req, res) {
     res.status(200).send('home route working');
 }
 
-function notFoundHandler(req,res){
+function notFoundHandler(req, res) {
     res.status(404).send('Not found 404')
 }
-server.listen(PORT,()=>{
+server.listen(PORT, () => {
     console.log(`listening on PORT ${PORT}`)
 })
